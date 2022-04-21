@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        function myAutoRun() {
+            console.log(1);
+            $.post({
+                url: "/function/jiangxi/youthlearn",
+                data: {},
+                success: function (data) {
+                    let course_id = data.uuid;
+                    let nid = data.nid;
+                    let userid = data.userid;
+                    let access_token = data.token;
+                    console.log(course_id);
+                    console.log(nid);
+                    console.log(userid);
+                    console.log(access_token);
+                    // get(course_id, nid, userid, access_token)
+                }
+            })
+        }
+
+        function get(course_id, nid, userid, access_token) {
+            $.get({
+                url: "https://osscache.vol.jxmfkj.com/html/h5_index.html?accessToken=" + access_token,
+                data: {},
+                success: function (data, status) {
+                    $.post({
+                        url: "/function/jiangxi/youthlearn/get",
+                        data: {
+                            data: data,
+                            status: status
+                        },
+                        success: function (data, status) {
+                            post(data, status, course_id, nid, userid, access_token)
+                        }
+                    })
+                }
+            })
+        }
+
+        function post(data, status, course_id, nid, userid, access_token) {
+            $.post({
+                url: "https://osscache.vol.jxmfkj.com/pub/vol/volClass/join?accessToken=" + access_token,
+                data: {
+                    "course": course_id,
+                    "nid": nid,
+                    "subOrg": null,
+                    "cardNo": userid
+                },
+                success: function (data, status) {
+                    $.post({
+                        url: "/function/jiangxi/youthlearn/post",
+                        data: {
+                            data: data,
+                            status: status
+                        },
+                        success: function () {}
+                    })
+                }
+            })
+        }
+        window.onload = myAutoRun();
+    </script>
+</head>
+<body>
+hello
+</body>
+</html>
